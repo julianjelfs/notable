@@ -1,9 +1,24 @@
 module Main exposing (..)
 
-import App exposing (..)
-import Html exposing (programWithFlags)
+import Actions exposing (Msg)
+import Html exposing (program, programWithFlags)
+import Update exposing (update)
+import View exposing (view)
+import ViewModel exposing (Model, initialModel)
 
 
-main : Program String Model Msg
+main : Program Never Model Msg
 main =
-    programWithFlags { view = view, init = init, update = update, subscriptions = subscriptions }
+    program
+        { view = view
+        , init = init
+        , update = update
+        , subscriptions = subscriptions }
+
+init : (Model, Cmd Msg)
+init =
+    (initialModel, Cmd.none)
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.none
