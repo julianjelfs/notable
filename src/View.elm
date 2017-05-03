@@ -9,15 +9,26 @@ import Svg.Attributes exposing (..)
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ img [ src model.logo ] []
-        , div
-            []
-            [roundRect]
-        ]
+    let
+        (w, h) =
+            (model.windowSize.width, model.windowSize.height)
 
-roundRect : Html Msg
-roundRect =
-    svg
-      [ width "120", height "120", viewBox "0 0 120 120" ]
-      [ rect [ x "10", y "10", width "100", height "100", rx "15", ry "15" ] [] ]
+        stave =
+            [10,13,16,19,22,30,33,36,39,42]
+                |> List.map toString
+                |> List.map
+                    (\n ->
+                        Svg.path
+                            [ strokeWidth "0.2"
+                            , stroke "black"
+                            , d ("M 10 " ++ n ++ " L 90 " ++ n)]
+                            []
+                    )
+    in
+        --svg element width and height defines the viewport
+        svg
+            [ width "100%"
+            , height "100%"
+            , viewBox "0 0 100 100"
+            ]
+            stave

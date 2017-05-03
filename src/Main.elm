@@ -1,10 +1,12 @@
 module Main exposing (..)
 
-import Actions exposing (Msg)
+import Actions exposing (..)
 import Html exposing (program, programWithFlags)
+import Task
 import Update exposing (update)
 import View exposing (view)
 import ViewModel exposing (Model, initialModel)
+import Window
 
 
 main : Program Never Model Msg
@@ -17,8 +19,9 @@ main =
 
 init : (Model, Cmd Msg)
 init =
-    (initialModel, Cmd.none)
+    (initialModel
+    , Task.perform WindowSize Window.size)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Window.resizes WindowSize

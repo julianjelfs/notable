@@ -5,4 +5,6 @@ import ViewModel exposing (Model)
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
-    ( model, Cmd.none )
+    case msg of
+        WindowSize size ->
+            ( {model | windowSize = size }, Cmd.none )

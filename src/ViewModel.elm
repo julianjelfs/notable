@@ -1,11 +1,12 @@
 module ViewModel exposing (..)
 
+import Window exposing (Size)
+
 type alias Model =
-    { message : String
-    , logo : String
+    { windowSize : Size
     }
 
 initialModel : Model
 initialModel =
-    { message = "Your Elm App is working!", logo = "" }
+    { windowSize = Size 0 0 }
 
