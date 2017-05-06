@@ -11,6 +11,7 @@ type alias Model =
     { windowSize : Size
     , currentNote : UniqueNote
     , mode : Mode
+    , summary : String
     }
 
 type alias OctaveIndex = Int
@@ -25,5 +26,6 @@ initialModel =
     { windowSize = Size 0 0
     , currentNote = (0,0)
     , mode = Easy
+    , summary = "Tap the letter of the note that you see on the stave"
     }
 

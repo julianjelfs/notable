@@ -19,19 +19,30 @@ body {
     border-top: none;
 }
 
-.mode-selector button {
-    margin:0;
-    padding:10px;
-    width:33.333%;
+button {
+    padding: 10px;
     background: #eee;
     border: 1px solid #ccc;
-    border-top: none;
     border-right: none;
-    font-size:18px;
     cursor: pointer;
+    font-size:18px;
 }
 
-.mode-selector button:focus {
+.answer button {
+    width:14.285%;
+    border-bottom: none;
+}
+
+button:first-child {
+    border-left:none;
+}
+
+.mode-selector button {
+    width:33.333%;
+    border-top: none;
+}
+
+button:focus {
     outline: 0;
 }
 
@@ -58,6 +69,13 @@ body {
 
 button.easy {
     border-left: none;
+}
+
+.summary {
+    background: hotpink;
+    color: #fff;
+    font-size: 12px;
+    padding:15px;
 }
 
 
