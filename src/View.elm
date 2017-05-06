@@ -22,7 +22,7 @@ stave =
 currentNote model =
     [ circle
         [ cx "50"
-        , cy "11.5"
+        , cy "13"
         , r "1"
         , stroke "black"
         , fill "black" ]

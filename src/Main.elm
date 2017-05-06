@@ -3,7 +3,7 @@ module Main exposing (..)
 import Actions exposing (..)
 import Html exposing (program, programWithFlags)
 import Task
-import Update exposing (update)
+import Update exposing (randomNote, update)
 import View exposing (view)
 import ViewModel exposing (Model, initialModel)
 import Window
@@ -20,7 +20,10 @@ main =
 init : (Model, Cmd Msg)
 init =
     (initialModel
-    , Task.perform WindowSize Window.size)
+    , Cmd.batch
+        [ Task.perform WindowSize Window.size
+        , randomNote ]
+    )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
