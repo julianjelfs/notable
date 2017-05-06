@@ -37,7 +37,7 @@ subscriptions model =
             [ Window.resizes WindowSize ]
     in
         (if model.answerStatus == Right then
-            subs ++ [ Time.every (Time.second * 2) Tick ]
+            subs ++ [ Time.every (Time.second * 0.5) Tick ]
         else
             subs)
             |> Sub.batch
