@@ -7,3 +7,4 @@ type Msg
     = WindowSize Size
     | RandomNote UniqueNote
     | SetMode Mode
+    | Guess String

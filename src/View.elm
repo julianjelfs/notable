@@ -68,7 +68,7 @@ answer model =
             |> List.map
                 (\c ->
                     button
-                        []
+                        [ onClick (Guess c)]
                         [ H.text c ]
                 )
         )

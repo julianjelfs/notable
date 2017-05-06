@@ -14,17 +14,17 @@ type alias Model =
     , summary : String
     }
 
-type alias OctaveIndex = Int
+type alias Octave = Int
 
-type alias NoteIndex = Int
+type alias Note = String
 
-type alias UniqueNote = (OctaveIndex, NoteIndex)
+type alias UniqueNote = (Octave, Note)
 
 
 initialModel : Model
 initialModel =
     { windowSize = Size 0 0
-    , currentNote = (0,0)
+    , currentNote = (0,"C")
     , mode = Easy
     , summary = "Tap the letter of the note that you see on the stave"
     }

@@ -1,18 +1,21 @@
 module Update exposing (..)
 
 import Actions exposing (..)
+import Char
 import Notes exposing (..)
-import Random exposing (..)
+import Random as R
 import ViewModel exposing (..)
 
 getRandomNote : Cmd Msg
 getRandomNote =
-    generate RandomNote randomNote
+    R.generate RandomNote randomNote
 
 
-randomNote : Generator UniqueNote
+randomNote : R.Generator UniqueNote
 randomNote =
-    pair (int 0 6) (int 0 6)
+    R.pair (R.int 0 6) (R.int 65 71)
+        |> R.map
+            (\(o, n) -> (o, n |> Char.fromCode |> String.fromChar))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -26,3 +29,20 @@ update msg model =
 
         SetMode mode ->
             ( { model | mode = mode }, Cmd.none )
+
+        Guess note ->
+            let
+                correct =
+                    note == (model.currentNote |> Tuple.second)
+
+                (summary, fx) =
+                    case correct of
+                        True ->
+                            ("Well done! " ++ note ++ " is the right answer. What's next?"
+                            , getRandomNote )
+                        False ->
+                            ("Nope that's the wrong answer. Try again"
+                            , Cmd.none )
+            in
+            ( { model | summary = summary }
+            , fx )
