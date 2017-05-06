@@ -7,11 +7,19 @@ type Mode
     | Medium    --middle four octaves
     | Hard      --all octaves
 
+type AnswerStatus
+    = Waiting
+    | Right
+    | Wrong
+
 type alias Model =
     { windowSize : Size
     , currentNote : UniqueNote
     , mode : Mode
     , summary : String
+    , answerStatus : AnswerStatus
+    , lastGuess : Maybe String
+    , percentage : Float
     }
 
 type alias Octave = Int
@@ -27,5 +35,8 @@ initialModel =
     , currentNote = (0,"C")
     , mode = Easy
     , summary = "Tap the letter of the note that you see on the stave"
+    , answerStatus = Waiting
+    , lastGuess = Nothing
+    , percentage = 0
     }
 

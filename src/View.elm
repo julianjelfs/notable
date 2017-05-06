@@ -28,16 +28,47 @@ stave =
                     []
             )
 
+baseForOctave : UniqueNote -> Float
+baseForOctave (index, _) =
+    case index of
+        0 -> 50
+        1 -> 25
+        2 -> 25
+        3 -> 25
+        4 -> 25
+        5 -> 25
+        _ -> 0
+
+noteOffset : UniqueNote -> Float
+noteOffset (_, note) =
+    case note of
+        "C" -> 0
+        "D" -> -1.5
+        "E" -> -3
+        "F" -> -4.5
+        "G" -> -6
+        "A" -> -7.5
+        "B" -> -9
+        _ -> 0
+
+
 currentNote : Model -> List (Svg Msg)
 currentNote model =
-    [ circle
-        [ cx "50"
-        , cy "13"
-        , r "1"
-        , stroke "black"
-        , fill "black" ]
-        []
-    ]
+    let
+        base =
+            baseForOctave model.currentNote
+
+        offset =
+            noteOffset model.currentNote
+    in
+        [ circle
+            [ cx "50"
+            , cy (base + offset |> toString)
+            , r "1"
+            , stroke "black"
+            , fill "black" ]
+            []
+        ]
 
 modeButton : Model -> Mode -> String -> String -> String -> Html Msg
 modeButton model mode txt sub cls =
@@ -62,21 +93,39 @@ modeSelector model =
 
 answer : Model -> Html Msg
 answer model =
-    div [ class "answer" ]
-        (List.range 65 71
-            |> List.map (Char.fromCode >> String.fromChar)
-            |> List.map
-                (\c ->
-                    button
-                        [ onClick (Guess c)]
-                        [ H.text c ]
-                )
-        )
+    let
+        (_, note) =
+            model.currentNote
+    in
+        div [ class "answer" ]
+            (List.range 65 71
+                |> List.map (Char.fromCode >> String.fromChar)
+                |> List.map
+                    (\c ->
+                        button
+                            [ onClick (Guess c)
+                            , classList
+                                [("correct", model.answerStatus == Right && (Just c == model.lastGuess) )
+                                ,("incorrect", model.answerStatus == Wrong && (Just c == model.lastGuess) )]
+                            ]
+                            [ H.text c ]
+                    )
+            )
+
+toPercent : Float -> String
+toPercent n =
+    (n |> round |> toString) ++ "%"
 
 summary: Model -> Html Msg
 summary model =
     div [class "summary"]
-        [ H.text model.summary ]
+        [ span
+            []
+            [ H.text model.summary ]
+        , span
+            [ class "score" ]
+            [ model.percentage |> toPercent |> H.text ]
+        ]
 
 view : Model -> Html Msg
 view model =

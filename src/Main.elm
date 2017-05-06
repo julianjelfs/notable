@@ -5,8 +5,9 @@ import Html exposing (program, programWithFlags)
 import Task
 import Update exposing (getRandomNote, update)
 import View exposing (view)
-import ViewModel exposing (Model, initialModel)
+import ViewModel exposing (..)
 import Window
+import Time
 
 
 main : Program Never Model Msg
@@ -19,12 +20,24 @@ main =
 
 init : (Model, Cmd Msg)
 init =
-    (initialModel
-    , Cmd.batch
-        [ Task.perform WindowSize Window.size
-        , getRandomNote ]
-    )
+    let
+        model =
+            initialModel
+    in
+        (model
+        , Cmd.batch
+            [ Task.perform WindowSize Window.size
+            , getRandomNote model.mode ]
+        )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Window.resizes WindowSize
+    let
+        subs =
+            [ Window.resizes WindowSize ]
+    in
+        (if model.answerStatus == Right then
+            subs ++ [ Time.every (Time.second * 2) Tick ]
+        else
+            subs)
+            |> Sub.batch

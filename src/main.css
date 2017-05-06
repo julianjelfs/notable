@@ -33,6 +33,18 @@ button {
     border-bottom: none;
 }
 
+.answer button.correct {
+    background: deepskyblue;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid deepskyblue;
+}
+
+.answer button.incorrect {
+    background: #ccc;
+    color: #fff;
+}
+
 button:first-child {
     border-left:none;
 }
@@ -76,6 +88,12 @@ button.easy {
     color: #fff;
     font-size: 12px;
     padding:15px;
+}
+
+.summary .score {
+    float: right;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 
