@@ -17,7 +17,7 @@ randomNote mode =
     let
         (min, max) =
             case mode of
-                Easy -> (2,2)
+                Easy -> (2,3)
                 Medium -> (1,4)
                 Hard -> (0,5)
     in

@@ -40,9 +40,9 @@ baseForOctave : UniqueNote -> Float
 baseForOctave (index, _) =
     case index of
         0 -> 50
-        1 -> 25
-        2 -> 35
-        3 -> 25
+        1 -> 57.5
+        2 -> 57.5
+        3 -> 35
         4 -> 25
         5 -> 25
         _ -> 0
