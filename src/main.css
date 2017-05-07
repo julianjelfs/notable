@@ -15,8 +15,6 @@ body {
 
 .stage {
     max-width: 500px;
-    border: 1px solid #ccc;
-    border-top: none;
 }
 
 button {
@@ -94,6 +92,13 @@ button.easy {
     float: right;
     font-size: 14px;
     font-weight: bold;
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    max-width: 500px;
+    width:100%;
 }
 
 

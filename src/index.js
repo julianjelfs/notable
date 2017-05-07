@@ -4,16 +4,36 @@ var Elm = require('./Main.elm');
 
 var root = document.getElementById('root');
 
-Elm.Main.embed(root);
+const app = Elm.Main.embed(root);
+var stats = JSON.parse(window.localStorage.getItem('note_stats')) || {};
+app.ports.stats.send(percentage(stats));
 
+function percentage(stats) {
+    var rights = 0;
+    var wrongs = 0;
 
-/*
-Going to probably need to store progress. Perhaps would be nice to store some general stats as well.
-Or might be best to just store an event stream so that we can draw different conclusions later.
+    for(k in stats) {
+        rights += stats[k].right;
+        wrongs += stats[k].wrong;
+    }
 
-{
-    a : { wrong: 10, right: 10 },
-    b : { wrong: 10, right: 10 },
-    c : { wrong: 10, right: 10 }
+    return (rights / (wrongs + rights)) * 100;
 }
- */
+
+app.ports.answer.subscribe(function(answer) {
+    if(stats[answer.note] == null) {
+        stats[answer.note] = {
+            right: 0,
+            wrong: 0
+        };
+    }
+
+    if(answer.correct) {
+        stats[answer.note].right += 1;
+    } else {
+        stats[answer.note].wrong += 1;
+    }
+
+    window.localStorage.setItem('note_stats', JSON.stringify(stats));
+    app.ports.stats.send(percentage(stats));
+});

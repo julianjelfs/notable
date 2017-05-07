@@ -40,9 +40,9 @@ baseForOctave : UniqueNote -> Float
 baseForOctave (index, _) =
     case index of
         0 -> 50
-        1 -> 25
-        2 -> 35
-        3 -> 25
+        1 -> 57.5
+        2 -> 57.5
+        3 -> 35
         4 -> 25
         5 -> 25
         _ -> 0
@@ -106,8 +106,7 @@ answer model =
             model.currentNote
     in
         div [ class "answer" ]
-            (List.range 65 71
-                |> List.map (Char.fromCode >> String.fromChar)
+            (["C","D","E","F","G","A","B"]
                 |> List.map
                     (\c ->
                         button
@@ -135,6 +134,13 @@ summary model =
             [ model.percentage |> toPercent |> H.text ]
         ]
 
+footer : Model -> Html Msg
+footer model =
+    div [class  "footer"]
+        [ answer model
+        , summary model
+        ]
+
 view : Model -> Html Msg
 view model =
     let
@@ -151,7 +157,6 @@ view model =
                 , viewBox "0 0 100 80"
                 ]
                 (trebleClef ++ stave ++ (currentNote model))
-            , answer model
-            , summary model
+            , footer model
             ]
 

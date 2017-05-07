@@ -10,3 +10,4 @@ type Msg
     | SetMode Mode
     | Guess String
     | Tick Time
+    | Stats Float

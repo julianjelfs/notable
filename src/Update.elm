@@ -5,6 +5,7 @@ import Char
 import Notes exposing (..)
 import Random as R
 import ViewModel exposing (..)
+import Ports exposing (answer)
 
 getRandomNote : Mode -> Cmd Msg
 getRandomNote mode =
@@ -16,7 +17,7 @@ randomNote mode =
     let
         (min, max) =
             case mode of
-                Easy -> (2,2)
+                Easy -> (2,3)
                 Medium -> (1,4)
                 Hard -> (0,5)
     in
@@ -39,8 +40,11 @@ update msg model =
 
         Guess note ->
             let
+                (_, currentNote) =
+                    model.currentNote
+
                 correct =
-                    note == (model.currentNote |> Tuple.second)
+                    note == currentNote
 
                 (summary, status) =
                     case correct of
@@ -55,7 +59,7 @@ update msg model =
                 | summary = summary
                 , answerStatus = status
                 , lastGuess = Just note }
-            , Cmd.none )
+            , answer { note = currentNote, correct = correct } )
 
         Tick _ ->
             case model.answerStatus of
@@ -65,3 +69,6 @@ update msg model =
                     }, getRandomNote model.mode)
                 _ ->
                     (model, Cmd.none)
+
+        Stats pc ->
+            ( {model | percentage = pc }, Cmd.none)
