@@ -45,10 +45,10 @@ update msg model =
                 (summary, status) =
                     case correct of
                         True ->
-                            ("Well done! " ++ note ++ " is the right answer. What's next?"
+                            ("Correct! " ++ note ++ " is the right answer"
                             , Right )
                         False ->
-                            ("Nope that's the wrong answer. Try again"
+                            ("Wrong answer :( try again"
                             , Wrong )
             in
             ( { model
@@ -61,7 +61,7 @@ update msg model =
             case model.answerStatus of
                 Right ->
                     ( {model | answerStatus = Waiting
-                    , summary = "Tap the letter of the note that you see on the stave"
+                    , summary = "Guess the note..."
                     }, getRandomNote model.mode)
                 _ ->
                     (model, Cmd.none)
