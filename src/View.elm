@@ -94,8 +94,8 @@ modeButton model mode txt sub cls =
 modeSelector : Model -> Html Msg
 modeSelector model =
     div [class "mode-selector"]
-        [ modeButton model Easy "Easy" "middle two octaves" "easy"
-        , modeButton model Medium "Medium" "middle four octaves" "medium"
+        [ modeButton model Easy "Easy" "two octaves" "easy"
+        , modeButton model Medium "Medium" "four octaves" "medium"
         , modeButton model Hard "Hard" "all octaves" "hard"
         ]
 

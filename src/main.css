@@ -25,7 +25,7 @@ button {
     border: 1px solid #ccc;
     border-right: none;
     cursor: pointer;
-    font-size:18px;
+    font-size:20px;
 }
 
 .answer button {
@@ -64,7 +64,7 @@ button:focus {
 
 .mode-selector button span:nth-child(2) {
     padding-top:5px;
-    font-size: 9px;
+    font-size: 11px;
     font-style: italic;
     color:#888;
 }
@@ -86,7 +86,7 @@ button.easy {
 .summary {
     background: hotpink;
     color: #fff;
-    font-size: 12px;
+    font-size: 14px;
     padding:15px;
 }
 
