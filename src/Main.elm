@@ -8,6 +8,7 @@ import View exposing (view)
 import ViewModel exposing (..)
 import Window
 import Time
+import Ports exposing (stats)
 
 
 main : Program Never Model Msg
@@ -34,7 +35,8 @@ subscriptions : Model -> Sub Msg
 subscriptions model =
     let
         subs =
-            [ Window.resizes WindowSize ]
+            [ Window.resizes WindowSize
+            , stats Stats ]
     in
         (if model.answerStatus == Right then
             subs ++ [ Time.every (Time.second * 0.5) Tick ]
