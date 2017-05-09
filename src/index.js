@@ -17,7 +17,7 @@ function percentage(stats) {
         wrongs += stats[k].wrong;
     }
 
-    return (rights / (wrongs + rights)) * 100;
+    return ((rights / (wrongs + rights)) * 100) || 0;
 }
 
 app.ports.answer.subscribe(function(answer) {
