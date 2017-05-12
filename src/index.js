@@ -21,17 +21,24 @@ function percentage(stats) {
 }
 
 app.ports.answer.subscribe(function(answer) {
-    if(stats[answer.note] == null) {
-        stats[answer.note] = {
+    var uniqueNote = answer.note + answer.octave;
+
+    if(stats[uniqueNote] == null) {
+        stats[uniqueNote] = {
             right: 0,
             wrong: 0
         };
     }
 
+    //tidy up from a previous format
+    if(stats[answer.note]) {
+        delete stats[answer.note];
+    }
+
     if(answer.correct) {
-        stats[answer.note].right += 1;
+        stats[uniqueNote].right += 1;
     } else {
-        stats[answer.note].wrong += 1;
+        stats[uniqueNote].wrong += 1;
     }
 
     window.localStorage.setItem('note_stats', JSON.stringify(stats));

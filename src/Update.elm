@@ -40,7 +40,7 @@ update msg model =
 
         Guess note ->
             let
-                (_, currentNote) =
+                (octave, currentNote) =
                     model.currentNote
 
                 correct =
@@ -59,7 +59,11 @@ update msg model =
                 | summary = summary
                 , answerStatus = status
                 , lastGuess = Just note }
-            , answer { note = currentNote, correct = correct } )
+            , answer
+                { octave = octave
+                , note = currentNote
+                , correct = correct }
+            )
 
         Tick _ ->
             case model.answerStatus of
@@ -69,6 +73,9 @@ update msg model =
                     }, getRandomNote model.mode)
                 _ ->
                     (model, Cmd.none)
+
+        ToggleStats ->
+            ( { model | showStats = not model.showStats }, Cmd.none )
 
         Stats pc ->
             ( {model | percentage = pc }, Cmd.none)

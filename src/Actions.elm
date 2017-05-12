@@ -11,3 +11,4 @@ type Msg
     | Guess String
     | Tick Time
     | Stats Float
+    | ToggleStats

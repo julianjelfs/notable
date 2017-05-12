@@ -20,6 +20,7 @@ type alias Model =
     , answerStatus : AnswerStatus
     , lastGuess : Maybe String
     , percentage : Float
+    , showStats : Bool
     }
 
 type alias Octave = Int
@@ -38,5 +39,6 @@ initialModel =
     , answerStatus = Waiting
     , lastGuess = Nothing
     , percentage = 0
+    , showStats = False
     }
 
