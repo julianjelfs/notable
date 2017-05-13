@@ -12,3 +12,4 @@ type Msg
     | Tick Time
     | ReceiveStats Stats
     | ToggleStats
+    | ShowOctave Int

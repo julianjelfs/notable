@@ -63,6 +63,7 @@ type alias Model =
     , lastGuess : Maybe String
     , stats : Stats
     , showStats : Bool
+    , statsOctave: Int
     }
 
 type alias Octave = Int
@@ -82,5 +83,6 @@ initialModel =
     , lastGuess = Nothing
     , stats = Stats []
     , showStats = False
+    , statsOctave = 0
     }
 

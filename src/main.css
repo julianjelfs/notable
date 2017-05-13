@@ -130,17 +130,64 @@ button.easy {
 }
 
 .stats {
-    width:400px;
-    height:400px;
+    max-width:400px;
+    min-width:300px;
+    height:380px;
     background: #fff;
     position:absolute;
     bottom: 38px;
     left:0;
-    border: 2px solid hotpink;
-    border-bottom: none;
-    border-left:none;
-    padding: 10px;
+    border: none;
     z-index:1;
+}
+
+.stats .header>div {
+    width: 14.286%;
+    float:left;
+    text-align: center;
+    border-bottom: 4px solid hotpink;
+    border-right: 1px solid hotpink;
+    padding:8px;
+}
+
+.stats .notes {
+    clear: both;
+    padding : 20px;
+}
+
+.stats .notes .note {
+    clear: both;
+}
+
+.stats .notes .note div {
+    float:left;
+    padding: 6px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.note-name {
+    width:20%;
+    text-align: left;
+}
+
+.note-correct {
+    background: rgba(0,255,0,0.2);
+    width:40%;
+}
+
+.note-incorrect {
+    background: rgba(255,0,0,0.2);
+    width:40%;
+}
+
+.stats .header>div.active {
+    background: hotpink;
+    color: #fff;
+}
+
+.stats .header>div:last-child {
+    border-right: none;
 }
 
 .stats h3 {

@@ -37,6 +37,9 @@ update msg model =
         SetMode mode ->
             ( { model | mode = mode }, Cmd.none )
 
+        ShowOctave o ->
+            ( { model | statsOctave = o }, Cmd.none )
+
         Guess note ->
             let
                 (octave, currentNote) =

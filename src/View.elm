@@ -2,8 +2,9 @@ module View exposing (..)
 
 import Actions exposing (..)
 import Html as H exposing (Html, button, div, img, text, span)
-import Html.Attributes exposing (classList)
+import Html.Attributes as H exposing (classList, style)
 import Html.Events exposing (onClick)
+import List.Extra
 import ViewModel exposing (..)
 import Svg as S exposing (..)
 import Svg.Attributes exposing (..)
@@ -127,17 +128,17 @@ currentNote model =
                 , stroke "black"
                 , fill "black" ]
                 [ ]
-            , S.text_
-                    [ x "50"
-                    , y (ypos |> toString)
-                    , textAnchor "middle"
-                    , stroke "#fff"
-                    , strokeWidth "0"
-                    , dy "1"
-                    , dx "0"
-                    , fontSize "3px"
-                    , fill "#fff" ]
-                    [ S.text noteTxt ]
+--            , S.text_
+--                    [ x "50"
+--                    , y (ypos |> toString)
+--                    , textAnchor "middle"
+--                    , stroke "#fff"
+--                    , strokeWidth "0"
+--                    , dy "1"
+--                    , dx "0"
+--                    , fontSize "3px"
+--                    , fill "#fff" ]
+--                    [ S.text noteTxt ]
             ]
     in
         (drawLedger ypos) ++ note
@@ -202,15 +203,78 @@ summary model =
 
 stats : Model -> Html Msg
 stats model =
-    div
-        [ class "stats" ]
-        [ H.h3
-            []
-            [ H.text "Statistics" ]
-        , button
-            [onClick ToggleStats]
-            [H.text "close" ]
-        ]
+    let
+        notes =
+            model.stats.octaves
+                |> List.Extra.find (\o -> o.octave == model.statsOctave)
+                |> Maybe.map .notes
+                |> Maybe.withDefault []
+    in
+        div
+            [ class "stats" ]
+            [ div
+                [ class "header" ]
+                ((model.stats.octaves
+                    |> List.map
+                        (\o ->
+                            div
+                                [classList [("active", model.statsOctave == o.octave)]
+                                , onClick (ShowOctave o.octave)]
+                                [ H.text <| toString o.octave ] )
+                ) ++ [div [onClick ToggleStats] [H.text "<="]])
+            , div
+                [class "notes"]
+                (notes
+                    |> List.map
+                        (\n ->
+                            let
+                                correct =
+                                    toFloat n.correct
+
+                                incorrect =
+                                    toFloat n.incorrect
+
+                                total =
+                                    correct + incorrect
+
+                                (pc, pi) =
+                                    case total == 0 of
+                                        True -> (40,40)
+                                        False ->
+                                            ( correct / total * 80
+                                            , incorrect / total * 80)
+
+                                noteDivs =
+                                    [ div
+                                        [ class "note-name" ]
+                                        [ H.text n.note ]
+                                    ]
+                            in
+                                div
+                                    [class "note"]
+                                    ( noteDivs
+                                        ++ (case pc > 0 of
+                                                False -> []
+                                                True ->
+                                                    [div
+                                                        [ class "note-correct"
+                                                        , H.style [("width", (toString pc) ++ "%")]
+                                                        ]
+                                                        [ H.text <| toString n.correct ]]
+                                            )
+                                        ++ (case pi > 0 of
+                                                False -> []
+                                                True ->
+                                                    [div
+                                                        [ class "note-incorrect"
+                                                        , H.style [("width", (toString pi) ++ "%")]
+                                                        ]
+                                                        [ H.text <| toString n.incorrect ]]
+                                            )
+                                    )
+                        )
+                )
+            ]
 
 
 footer : Model -> Html Msg
