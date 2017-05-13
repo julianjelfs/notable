@@ -2,7 +2,6 @@ module Update exposing (..)
 
 import Actions exposing (..)
 import Char
-import Notes exposing (..)
 import Random as R
 import ViewModel exposing (..)
 import Ports exposing (answer)
@@ -50,10 +49,10 @@ update msg model =
                     case correct of
                         True ->
                             ("Correct! " ++ note ++ " is the right answer"
-                            , Right )
+                            , Correct )
                         False ->
                             ("Wrong answer :( try again"
-                            , Wrong )
+                            , Incorrect )
             in
             ( { model
                 | summary = summary
@@ -67,7 +66,7 @@ update msg model =
 
         Tick _ ->
             case model.answerStatus of
-                Right ->
+                Correct ->
                     ( {model | answerStatus = Waiting
                     , summary = "Guess the note..."
                     }, getRandomNote model.mode)
@@ -77,5 +76,5 @@ update msg model =
         ToggleStats ->
             ( { model | showStats = not model.showStats }, Cmd.none )
 
-        Stats pc ->
-            ( {model | percentage = pc }, Cmd.none)
+        ReceiveStats stats ->
+            ( {model | stats = stats }, Cmd.none)

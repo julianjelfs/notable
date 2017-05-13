@@ -1,7 +1,6 @@
 module View exposing (..)
 
 import Actions exposing (..)
-import Char
 import Html as H exposing (Html, button, div, img, text, span)
 import Html.Attributes exposing (classList)
 import Html.Events exposing (onClick)
@@ -178,16 +177,16 @@ answer model =
                         button
                             [ onClick (Guess c)
                             , classList
-                                [("correct", model.answerStatus == Right && (Just c == model.lastGuess) )
-                                ,("incorrect", model.answerStatus == Wrong && (Just c == model.lastGuess) )]
+                                [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
+                                ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
                             ]
                             [ H.text c ]
                     )
             )
 
-toPercent : Float -> String
+toPercent : Int -> String
 toPercent n =
-    (n |> round |> toString) ++ "%"
+    (n |> toString) ++ "%"
 
 summary: Model -> Html Msg
 summary model =
@@ -196,9 +195,12 @@ summary model =
             []
             [ H.text model.summary ]
         , span
-            [ class "score" ]
-            [ model.percentage |> toPercent |> H.text ]
+            [ class "score"
+            , onClick ToggleStats ]
+            [ percentage model.stats |> toPercent |> H.text ]
         ]
+
+
 
 footer : Model -> Html Msg
 footer model =

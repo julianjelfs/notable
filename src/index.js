@@ -4,43 +4,49 @@ var Elm = require('./Main.elm');
 
 var root = document.getElementById('root');
 
-const app = Elm.Main.embed(root);
-let stats = JSON.parse(window.localStorage.getItem('note_stats')) || {};
-app.ports.stats.send(percentage(stats));
-
-function percentage(stats) {
-    let rights = 0;
-    let wrongs = 0;
-
-    for(k in stats) {
-        rights += stats[k].right;
-        wrongs += stats[k].wrong;
+function emptyStats() {
+    return {
+        octaves: [0,1,2,3,4,5].map(function(o) {
+            return {
+                octave: o,
+                notes: ['C', 'D', 'E', 'F', 'G', 'A', 'B'].map(function (n) {
+                    return {
+                        note: n,
+                        correct: 0,
+                        incorrect: 0
+                    };
+                })
+            };
+        })
     }
+}
 
-    return ((rights / (wrongs + rights)) * 100) || 0;
+const app = Elm.Main.embed(root);
+var stats = JSON.parse(window.localStorage.getItem('note_stats')) || emptyStats();
+if(!stats.octaves) {
+    stats = emptyStats();
+}
+app.ports.receiveStats.send(stats);
+
+function noteIndex(notes, note) {
+    for(var i=0; i<notes.length; i++) {
+        if(notes[i].note == note) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 app.ports.answer.subscribe(function(answer) {
-    var uniqueNote = answer.note + answer.octave;
-
-    if(stats[uniqueNote] == null) {
-        stats[uniqueNote] = {
-            right: 0,
-            wrong: 0
-        };
-    }
-
-    //tidy up from a previous format
-    if(stats[answer.note]) {
-        delete stats[answer.note];
-    }
-
+    console.log(answer);
+    var index = noteIndex(stats.octaves[answer.octave].notes, answer.note);
     if(answer.correct) {
-        stats[uniqueNote].right += 1;
+        stats.octaves[answer.octave].notes[index].correct += 1
     } else {
-        stats[uniqueNote].wrong += 1;
+        stats.octaves[answer.octave].notes[index].incorrect += 1
     }
 
     window.localStorage.setItem('note_stats', JSON.stringify(stats));
-    app.ports.stats.send(percentage(stats));
+    app.ports.receiveStats.send(stats);
 });
+
