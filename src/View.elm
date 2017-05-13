@@ -192,21 +192,24 @@ summary: Model -> Html Msg
 summary model =
     div [class "summary"]
         [ span
-            [ class "msg"]
-            [ H.text model.summary ]
-        , span
             [ class "score"
             , onClick ToggleStats ]
             [ percentage model.stats |> toPercent |> H.text ]
+         , span
+            [ class "msg"]
+            [ H.text model.summary ]
         ]
 
 stats : Model -> Html Msg
 stats model =
     div
-        [ classList [("stats", True), ("active", model.showStats)]]
+        [ class "stats" ]
         [ H.h3
             []
             [ H.text "Statistics" ]
+        , button
+            [onClick ToggleStats]
+            [H.text "close" ]
         ]
 
 
@@ -217,6 +220,11 @@ footer model =
         , summary model
         ]
 
+overlay : Model -> Html Msg
+overlay model =
+    div [classList [("overlay", True), ("active", model.showStats)]]
+        [ stats model ]
+
 view : Model -> Html Msg
 view model =
     let
@@ -226,7 +234,8 @@ view model =
     in
         div
             [class "stage"]
-            [ modeSelector model
+            [ overlay model
+            , modeSelector model
             , svg
                 [ width "100%"
                 , height "100%"
@@ -234,6 +243,5 @@ view model =
                 ]
                 (trebleClef ++ stave ++ (currentNote model))
             , footer model
-            , stats model
             ]
 
