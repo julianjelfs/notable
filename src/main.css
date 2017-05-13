@@ -15,6 +15,7 @@ body {
 
 .stage {
     max-width: 500px;
+    position: relative;
 }
 
 button {
@@ -85,13 +86,22 @@ button.easy {
     background: hotpink;
     color: #fff;
     font-size: 14px;
-    padding:15px;
+    padding:5px;
+    height:38px;
+}
+
+.summary .msg {
+    padding: 5px;
+    display:inline-block;
 }
 
 .summary .score {
     float: right;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #fff;
+    padding: 5px 20px 5px 20px;
 }
 
 .footer {
@@ -99,6 +109,27 @@ button.easy {
     bottom: 0;
     max-width: 500px;
     width:100%;
+}
+
+.stats {
+    display: none;
+    width:400px;
+    height:400px;
+    background: hotpink;
+    position:absolute;
+    bottom: 38px;
+    right:0;
+    border-bottom: 1px solid #fff;
+    color: #fff;
+    padding: 10px;
+}
+
+.stats h3 {
+    margin:0;
+}
+
+.stats.active {
+    display: block;
 }
 
 

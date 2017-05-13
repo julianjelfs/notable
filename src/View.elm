@@ -192,7 +192,7 @@ summary: Model -> Html Msg
 summary model =
     div [class "summary"]
         [ span
-            []
+            [ class "msg"]
             [ H.text model.summary ]
         , span
             [ class "score"
@@ -200,6 +200,14 @@ summary model =
             [ percentage model.stats |> toPercent |> H.text ]
         ]
 
+stats : Model -> Html Msg
+stats model =
+    div
+        [ classList [("stats", True), ("active", model.showStats)]]
+        [ H.h3
+            []
+            [ H.text "Statistics" ]
+        ]
 
 
 footer : Model -> Html Msg
@@ -226,5 +234,6 @@ view model =
                 ]
                 (trebleClef ++ stave ++ (currentNote model))
             , footer model
+            , stats model
             ]
 
