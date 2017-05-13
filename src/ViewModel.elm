@@ -9,8 +9,50 @@ type Mode
 
 type AnswerStatus
     = Waiting
-    | Right
-    | Wrong
+    | Correct
+    | Incorrect
+
+totalsForOctave : OctaveStats -> (Int, Int) -> (Int, Int)
+totalsForOctave octave agg =
+    octave.notes
+        |> List.foldl
+            (\n (c, i) ->
+                (c + n.correct, i + n.incorrect)
+            )
+            agg
+
+mapBoth fn =
+    Tuple.mapFirst fn >> Tuple.mapSecond fn
+
+percentage : Stats -> Int
+percentage stats =
+    let
+        answers =
+            stats.octaves
+                |> List.foldl
+                    totalsForOctave
+                    (0,0)
+                |> mapBoth toFloat
+                |> Debug.log "answers"
+    in
+        case answers of
+            (0,0) -> 0
+            (correct, incorrect) ->
+                (correct / (correct + incorrect)) * 100 |> round
+
+type alias NoteStats =
+    { note: String
+    , correct: Int
+    , incorrect: Int
+    }
+
+type alias OctaveStats =
+    { octave: Int
+    , notes: List NoteStats
+    }
+
+type alias Stats =
+    { octaves : List OctaveStats }
 
 type alias Model =
     { windowSize : Size
@@ -19,7 +61,9 @@ type alias Model =
     , summary : String
     , answerStatus : AnswerStatus
     , lastGuess : Maybe String
-    , percentage : Float
+    , stats : Stats
+    , showStats : Bool
+    , statsOctave: Int
     }
 
 type alias Octave = Int
@@ -37,6 +81,8 @@ initialModel =
     , summary = "Guess the note..."
     , answerStatus = Waiting
     , lastGuess = Nothing
-    , percentage = 0
+    , stats = Stats []
+    , showStats = False
+    , statsOctave = 0
     }
 

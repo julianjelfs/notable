@@ -17,6 +17,24 @@ body {
     max-width: 500px;
 }
 
+.overlay {
+    background: rgba(0,0,0,0.2);
+    max-width:500px;
+    width:100%;
+    height:100%;
+    left: -500px;
+    position:fixed;
+    top:0;
+    opacity: 0;
+    transition: left 200ms, opacity 200ms;
+    transition-timing-function: ease-in-out;
+}
+.overlay.active {
+    left:0;
+    opacity: 1;
+}
+
+
 button {
     padding: 10px;
     background: #eee;
@@ -85,13 +103,23 @@ button.easy {
     background: hotpink;
     color: #fff;
     font-size: 14px;
-    padding:15px;
+    padding:5px;
+    height:38px;
+}
+
+.summary .msg {
+    padding: 5px;
+    display:inline-block;
+    float:right;
 }
 
 .summary .score {
-    float: right;
+    float: left;
     font-size: 14px;
     font-weight: bold;
+    cursor: pointer;
+    border: 1px solid #fff;
+    padding: 5px 20px 5px 20px;
 }
 
 .footer {
@@ -100,5 +128,71 @@ button.easy {
     max-width: 500px;
     width:100%;
 }
+
+.stats {
+    max-width:400px;
+    min-width:300px;
+    height:380px;
+    background: #fff;
+    position:absolute;
+    bottom: 38px;
+    left:0;
+    border: none;
+    z-index:1;
+}
+
+.stats .header>div {
+    width: 14.286%;
+    float:left;
+    text-align: center;
+    border-bottom: 4px solid hotpink;
+    border-right: 1px solid hotpink;
+    padding:8px;
+}
+
+.stats .notes {
+    clear: both;
+    padding : 20px;
+}
+
+.stats .notes .note {
+    clear: both;
+}
+
+.stats .notes .note div {
+    float:left;
+    padding: 6px;
+    text-align: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.note-name {
+    width:20%;
+    text-align: left;
+}
+
+.note-correct {
+    background: rgba(0,255,0,0.2);
+    width:40%;
+}
+
+.note-incorrect {
+    background: rgba(255,0,0,0.2);
+    width:40%;
+}
+
+.stats .header>div.active {
+    background: hotpink;
+    color: #fff;
+}
+
+.stats .header>div:last-child {
+    border-right: none;
+}
+
+.stats h3 {
+    margin:0;
+}
+
 
 

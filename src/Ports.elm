@@ -1,5 +1,7 @@
 port module Ports exposing (..)
 
-port answer : {note: String, correct: Bool} -> Cmd msg
+import Json.Encode as Encode
 
-port stats : (Float -> msg) -> Sub msg
+port answer : {octave: Int, note: String, correct: Bool} -> Cmd msg
+
+port receiveStats : (Encode.Value -> msg) -> Sub msg

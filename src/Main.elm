@@ -8,7 +8,9 @@ import View exposing (view)
 import ViewModel exposing (..)
 import Window
 import Time
-import Ports exposing (stats)
+import Ports exposing (receiveStats)
+import Json.Encode as Encode
+import Json.Decode as Decode
 
 
 main : Program Never Model Msg
@@ -31,14 +33,49 @@ init =
             , getRandomNote model.mode ]
         )
 
+noteStatsDecoder : Decode.Decoder NoteStats
+noteStatsDecoder =
+    Decode.map3 NoteStats
+        (Decode.field "note" Decode.string)
+        (Decode.field "correct" Decode.int)
+        (Decode.field "incorrect" Decode.int)
+
+octaveStatsDecoder : Decode.Decoder OctaveStats
+octaveStatsDecoder =
+    Decode.map2 OctaveStats
+        (Decode.field "octave" Decode.int)
+        (Decode.field "notes" (Decode.list noteStatsDecoder))
+
+statsDecoder : Decode.Decoder Stats
+statsDecoder =
+    Decode.map Stats
+        (Decode.field "octaves" (Decode.list octaveStatsDecoder))
+
+decodeStats : Encode.Value -> Stats
+decodeStats encoded =
+    let
+        res =
+            Decode.decodeValue
+                statsDecoder
+                encoded
+    in
+        case res of
+            Err err ->
+                let
+                    e = Debug.log "Error" err
+                in
+                    Stats []
+            Ok s ->
+                s
+
 subscriptions : Model -> Sub Msg
 subscriptions model =
     let
         subs =
             [ Window.resizes WindowSize
-            , stats Stats ]
+            , receiveStats (decodeStats >> ReceiveStats) ]
     in
-        (if model.answerStatus == Right then
+        (if model.answerStatus == Correct then
             subs ++ [ Time.every (Time.second * 0.5) Tick ]
         else
             subs)
