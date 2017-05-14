@@ -85,6 +85,9 @@ drawLedger ypos =
                 (\n (lines, y) ->
                     let
                         yStr = y |> toString
+                        n2 = n * 2
+                        from = 45 - n2 |> toString
+                        to = 55 + n2 |> toString
                     in
                         ( lines ++ ( case (baseLines ++ trebleLines |> List.member y) of
                             True -> []
@@ -92,17 +95,43 @@ drawLedger ypos =
                                 [ S.path
                                     [ strokeWidth "0.2"
                                     , stroke "black"
-                                    , d ("M 45 " ++ yStr ++ " L 55 " ++ yStr)]
+                                    , d ("M " ++ from ++ " " ++ yStr ++ " L " ++ to ++ " " ++ yStr)]
                                     [] ] ), direction y 4)
                 ) ([], y)
             |> Tuple.first
 
+showHint : UniqueNote -> Stats -> Bool
+showHint (octave, note) stats =
+    stats.octaves
+        |> List.Extra.find
+            (\o -> o.octave == octave)
+        |> Maybe.andThen
+            (\o ->
+                o.notes |> List.Extra.find (\n -> n.note == note)
+            )
+        |> Maybe.map
+            (\n ->
+                let
+                    correct = toFloat n.correct
 
+                    incorrect = toFloat n.incorrect
 
+                    total =
+                        correct + incorrect
+                in
+                    case total == 0 of
+                        True -> True
+                        False ->
+                            correct / total * 100 < 50
+            )
+        |> Maybe.withDefault False
 
 currentNote : Model -> List (Svg Msg)
 currentNote model =
     let
+        hint =
+            showHint model.currentNote model.stats
+
         base =
             baseForOctave model.currentNote
 
@@ -122,21 +151,26 @@ currentNote model =
                 , r "1.5"
                 , stroke "black"
                 , fill "black" ]
-                [ ]
---            , S.text_
---                    [ x "50"
---                    , y (ypos |> toString)
---                    , textAnchor "middle"
---                    , stroke "#fff"
---                    , strokeWidth "0"
---                    , dy "1"
---                    , dx "0"
---                    , fontSize "3px"
---                    , fill "#fff" ]
---                    [ S.text noteTxt ]
-            ]
+                [ ] ]
+
+        hintNode =
+            case hint of
+                True ->
+                    [ S.text_
+                            [ x "50"
+                            , y (ypos |> toString)
+                            , textAnchor "middle"
+                            , stroke "#fff"
+                            , strokeWidth "0"
+                            , dy "1"
+                            , dx "0"
+                            , fontSize "3px"
+                            , fill "#fff" ]
+                            [ S.text noteTxt ]
+                    ]
+                False -> []
     in
-        (drawLedger ypos) ++ note
+        (drawLedger ypos) ++ note ++ hintNode
 
 
 modeButton : Model -> Mode -> String -> String -> String -> Html Msg
@@ -299,7 +333,7 @@ view model =
                 , height "100%"
                 , viewBox "0 0 100 95"
                 ]
-                (trebleClef ++ stave ++ (currentNote model))
+                (baseClef ++ trebleClef ++ stave ++ (currentNote model))
             , footer model
             ]
 
