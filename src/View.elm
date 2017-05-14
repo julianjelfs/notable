@@ -145,10 +145,11 @@ currentNote model =
             model.currentNote
 
         note =
-            [ circle
+            [ ellipse
                 [ cx "50"
                 , cy (ypos |> toString)
-                , r "1.5"
+                , ry "1.5"
+                , rx "2.2"
                 , stroke "black"
                 , fill "black" ]
                 [ ] ]
