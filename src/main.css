@@ -17,22 +17,6 @@ body {
     max-width: 500px;
 }
 
-.overlay {
-    background: rgba(0,0,0,0.2);
-    max-width:500px;
-    width:100%;
-    height:100%;
-    left: -500px;
-    position:fixed;
-    top:0;
-    opacity: 0;
-    transition: left 200ms, opacity 200ms;
-    transition-timing-function: ease-in-out;
-}
-.overlay.active {
-    left:0;
-    opacity: 1;
-}
 
 
 button {
@@ -129,13 +113,29 @@ button.easy {
     width:100%;
 }
 
+.overlay {
+    background: rgba(0,0,0,0.2);
+    max-width:500px;
+    width:100%;
+    height:100%;
+    left: -500px;
+    position:fixed;
+    top:0;
+    opacity: 0;
+    transition: left 200ms, opacity 200ms;
+    transition-timing-function: ease-in-out;
+}
+.overlay.active {
+    left:0;
+    opacity: 1;
+}
+
 .stats {
     max-width:400px;
     min-width:300px;
-    height:380px;
     background: #fff;
     position:absolute;
-    bottom: 38px;
+    bottom: 45px;
     left:0;
     border: none;
     z-index:1;
@@ -152,7 +152,6 @@ button.easy {
 
 .stats .notes {
     clear: both;
-    padding : 20px;
 }
 
 .stats .notes .note {
