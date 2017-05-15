@@ -160,24 +160,30 @@ button.easy {
 
 .stats .notes .note div {
     float:left;
-    padding: 6px;
     text-align: center;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #fff;
 }
 
 .note-name {
     width:20%;
+    padding: 6px;
     text-align: left;
 }
 
-.note-correct {
-    background: rgba(0,255,0,0.2);
+.note-correct, .note-incorrect {
     width:40%;
+    height:36px;
+    padding:0;
+}
+
+.note-correct {
+    background: rgba(255,105,180,0.5);
+    background: hotpink;
 }
 
 .note-incorrect {
-    background: rgba(255,0,0,0.2);
-    width:40%;
+    background: rgba(0,191,255,0.5);
+    background: deepskyblue;
 }
 
 .stats .header>div.active {

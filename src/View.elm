@@ -145,11 +145,10 @@ currentNote model =
             model.currentNote
 
         note =
-            [ ellipse
+            [ circle
                 [ cx "50"
                 , cy (ypos |> toString)
-                , ry "1.5"
-                , rx "2.2"
+                , r "1.5"
                 , stroke "black"
                 , fill "black" ]
                 [ ] ]
@@ -290,7 +289,7 @@ stats model =
                                                         [ class "note-correct"
                                                         , H.style [("width", (toString pc) ++ "%")]
                                                         ]
-                                                        [ H.text <| toString n.correct ]]
+                                                        []]
                                             )
                                         ++ (case pi > 0 of
                                                 False -> []
@@ -299,7 +298,7 @@ stats model =
                                                         [ class "note-incorrect"
                                                         , H.style [("width", (toString pi) ++ "%")]
                                                         ]
-                                                        [ H.text <| toString n.incorrect ]]
+                                                        []]
                                             )
                                     )
                         )
