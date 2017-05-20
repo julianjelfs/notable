@@ -11,6 +11,7 @@ import Time
 import Ports exposing (receiveStats)
 import Json.Encode as Encode
 import Json.Decode as Decode
+import AnimationFrame exposing (diffs)
 
 
 main : Program Never Model Msg
@@ -70,13 +71,7 @@ decodeStats encoded =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    let
-        subs =
-            [ Window.resizes WindowSize
-            , receiveStats (decodeStats >> ReceiveStats) ]
-    in
-        (if model.answerStatus == Correct then
-            subs ++ [ Time.every (Time.second * 0.5) Tick ]
-        else
-            subs)
-            |> Sub.batch
+    Sub.batch
+        [ Window.resizes WindowSize
+        , receiveStats (decodeStats >> ReceiveStats)
+        , (if model.status == Playing then diffs Tick else Sub.none) ]
