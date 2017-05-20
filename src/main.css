@@ -17,6 +17,10 @@ body {
     max-width: 500px;
 }
 
+.countdown {
+    height: 10px;
+    background-color: rgba(0, 255, 0, 0.5);
+}
 
 
 button {
@@ -50,8 +54,22 @@ button:first-child {
 }
 
 .mode-selector button {
-    width:33.333%;
+    width:26.666%;
     border-top: none;
+}
+
+.play-pause {
+    cursor: pointer;
+    float:right;
+    width:20%;
+    text-align: center;
+    font-size: 40px;
+    color:white;
+    background: hotpink;
+    height:61px;
+    border-bottom:1px solid #ccc;
+    border-left:1px solid #ccc;
+    padding-top:6px;
 }
 
 button:focus {

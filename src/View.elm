@@ -1,7 +1,7 @@
 module View exposing (..)
 
 import Actions exposing (..)
-import Html as H exposing (Html, button, div, img, text, span)
+import Html as H exposing (Html, button, div, i, img, span, text)
 import Html.Attributes as H exposing (classList, style)
 import Html.Events exposing (onClick)
 import List.Extra
@@ -111,18 +111,7 @@ showHint (octave, note) stats =
             )
         |> Maybe.map
             (\n ->
-                let
-                    correct = toFloat n.correct
-
-                    incorrect = toFloat n.incorrect
-
-                    total =
-                        correct + incorrect
-                in
-                    case total == 0 of
-                        True -> True
-                        False ->
-                            correct / total * 100 < 50
+                n.correct + n.incorrect <= 5
             )
         |> Maybe.withDefault False
 
@@ -192,6 +181,17 @@ modeSelector model =
         [ modeButton model Easy "Easy" "two octaves" "easy"
         , modeButton model Medium "Medium" "four octaves" "medium"
         , modeButton model Hard "Hard" "all octaves" "hard"
+        , div
+            [ class "play-pause"
+            , onClick ToggleStatus ]
+            [ i
+                [ classList
+                    [ ("fa", True)
+                    , ("fa-play", model.status == Paused)
+                    , ("fa-pause", model.status == Playing)
+                    ] ]
+                []
+            ]
         ]
 
 answer : Model -> Html Msg
@@ -306,10 +306,24 @@ stats model =
             ]
 
 
+countdown : Model -> Html Msg
+countdown model =
+    let
+        w =
+            model.time / (timeAllowed model.mode) * 100 |> toString
+    in
+        div
+            [ class "countdown"
+            , H.style [ ("width", w ++ "%") ]
+            ]
+            []
+
+
 footer : Model -> Html Msg
 footer model =
     div [class  "footer"]
-        [ answer model
+        [ countdown model
+        , answer model
         , summary model
         ]
 

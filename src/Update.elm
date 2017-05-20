@@ -48,36 +48,62 @@ update msg model =
                 correct =
                     note == currentNote
 
-                (summary, status) =
+                (summary, status, cmd, time) =
                     case correct of
                         True ->
                             ("Correct! " ++ note ++ " is the right answer"
-                            , Correct )
+                            , Waiting
+                            , getRandomNote model.mode
+                            , timeAllowed model.mode )
                         False ->
                             ("Wrong answer :( try again"
-                            , Incorrect )
+                            , Incorrect
+                            , Cmd.none
+                            , model.time )
+
             in
             ( { model
                 | summary = summary
                 , answerStatus = status
+                , time = time
                 , lastGuess = Just note }
-            , answer
-                { octave = octave
-                , note = currentNote
-                , correct = correct }
+            , Cmd.batch
+                [ answer
+                    { octave = octave
+                    , note = currentNote
+                    , correct = correct }
+                , cmd ]
             )
 
-        Tick _ ->
-            case model.answerStatus of
-                Correct ->
-                    ( {model | answerStatus = Waiting
-                    , summary = "Guess the note..."
-                    }, getRandomNote model.mode)
-                _ ->
-                    (model, Cmd.none)
+        Tick t ->
+            let
+                (octave, note) =
+                    model.currentNote
+
+                time =
+                    model.time - t
+
+            in
+                if time <= 0 then
+                    ( { model | time = timeAllowed model.mode }
+                    , Cmd.batch
+                        [ answer
+                            { octave = octave
+                            , note = note
+                            , correct = False }
+                        , getRandomNote model.mode ]
+                    )
+                else
+                    ( { model | time = time }, Cmd.none)
 
         ToggleStats ->
             ( { model | showStats = not model.showStats }, Cmd.none )
+
+        ToggleStatus ->
+            ( { model | status =
+                (case model.status of
+                    Playing -> Paused
+                    Paused -> Playing) }, Cmd.none)
 
         ReceiveStats stats ->
             ( {model | stats = stats }, Cmd.none)

@@ -13,3 +13,4 @@ type Msg
     | ReceiveStats Stats
     | ToggleStats
     | ShowOctave Int
+    | ToggleStatus

@@ -1,11 +1,25 @@
 module ViewModel exposing (..)
 
+import Time
 import Window exposing (Size)
+
+timeAllowed: Mode -> Float
+timeAllowed mode =
+    (case mode of
+        Easy -> 5
+        Medium -> 4
+        Hard -> 3)
+        |> ((*) Time.second)
+
 
 type Mode
     = Easy      --middle two octaves
     | Medium    --middle four octaves
     | Hard      --all octaves
+
+type GameStatus
+    = Playing
+    | Paused
 
 type AnswerStatus
     = Waiting
@@ -64,6 +78,8 @@ type alias Model =
     , stats : Stats
     , showStats : Bool
     , statsOctave: Int
+    , time : Float
+    , status : GameStatus
     }
 
 type alias Octave = Int
@@ -84,5 +100,7 @@ initialModel =
     , stats = Stats []
     , showStats = False
     , statsOctave = 0
+    , time = timeAllowed Easy
+    , status = Paused
     }
 
