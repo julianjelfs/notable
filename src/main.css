@@ -56,20 +56,17 @@ button:first-child {
 .mode-selector button {
     width:26.666%;
     border-top: none;
+    height: 60px;
 }
 
-.play-pause {
+button.play-pause {
     cursor: pointer;
     float:right;
     width:20%;
     text-align: center;
-    font-size: 40px;
+    font-size: 35px;
     color:white;
     background: hotpink;
-    height:61px;
-    border-bottom:1px solid #ccc;
-    border-left:1px solid #ccc;
-    padding-top:6px;
 }
 
 button:focus {
@@ -195,13 +192,11 @@ button.easy {
 }
 
 .note-correct {
-    background: rgba(255,105,180,0.5);
-    background: hotpink;
+    background: rgba(0,255,0,0.3);
 }
 
 .note-incorrect {
-    background: rgba(0,191,255,0.5);
-    background: deepskyblue;
+    background: rgba(255,0,0,0.3);
 }
 
 .stats .header>div.active {

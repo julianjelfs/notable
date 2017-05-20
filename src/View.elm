@@ -181,7 +181,7 @@ modeSelector model =
         [ modeButton model Easy "Easy" "two octaves" "easy"
         , modeButton model Medium "Medium" "four octaves" "medium"
         , modeButton model Hard "Hard" "all octaves" "hard"
-        , div
+        , button
             [ class "play-pause"
             , onClick ToggleStatus ]
             [ i
