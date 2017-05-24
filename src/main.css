@@ -22,6 +22,38 @@ body {
     background-color: rgba(0, 255, 0, 0.5);
 }
 
+.blacks div.correct {
+    background: deepskyblue;
+    color: #fff;
+    font-weight: bold;
+    border: 1px solid deepskyblue;
+}
+
+.blacks div.incorrect {
+    background: #ccc;
+    color: #fff;
+}
+
+.blacks div {
+    height:  50px;
+    background-color: #eee;
+    float:left;
+}
+
+
+.blacks div.right {
+    border-right: 1px solid #ccc;
+}
+
+.blacks div.filled {
+    background-color: #000;
+    border-right: none;
+    width: auto;
+}
+
+.blacks div:last-child {
+    border-right: none;
+}
 
 button {
     padding: 10px;
@@ -32,9 +64,15 @@ button {
     font-size:20px;
 }
 
+.answer {
+    clear:both;
+}
+
 .answer button {
     width:14.285%;
     border-bottom: none;
+    border-top: none;
+    padding-top: 0;
 }
 
 .answer button.correct {
