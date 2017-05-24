@@ -199,20 +199,56 @@ answer model =
     let
         (_, note) =
             model.currentNote
+
+        leftFilled c =
+            List.member c ["D","E","G","A","B"]
+
+        rightFilled c =
+            List.member c ["C","D","F","G","A"]
     in
-        div [ class "answer" ]
-            (["C","D","E","F","G","A","B"]
-                |> List.map
-                    (\c ->
-                        button
-                            [ onClick (Guess c)
-                            , classList
-                                [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
-                                ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+        div
+            []
+            [ div [ class "blacks" ]
+                (["C","D","E","F","G","A","B"]
+                    |> List.concatMap
+                        (\c ->
+                            let
+                                correctOrIncorrect =
+                                    [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
+                                        ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+                            in
+                            [ div
+                                [ classList ([("filled", leftFilled c) ] ++ correctOrIncorrect)
+                                , H.style [("width", "2.041%")]
+                                ]
+                                []
+                            , div
+                                [ classList correctOrIncorrect
+                                , H.style [("width", "10.204%")] ]
+                                []
+                            , div
+                                [ classList ([("right", True), ("filled", rightFilled c) ] ++ correctOrIncorrect)
+                                , H.style [("width", "2.041%")]
+                                ]
+                                []
                             ]
-                            [ H.text c ]
-                    )
-            )
+                        )
+                )
+            , div [ class "answer" ]
+                (["C","D","E","F","G","A","B"]
+                    |> List.map
+                        (\c ->
+                            button
+                                [ onClick (Guess c)
+                                , classList
+                                    [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
+                                    ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+                                ]
+                                [ H.text c ]
+                        )
+                )
+            ]
+
 
 toPercent : Int -> String
 toPercent n =
