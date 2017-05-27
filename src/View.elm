@@ -1,8 +1,8 @@
 module View exposing (..)
 
 import Actions exposing (..)
-import Html as H exposing (Html, button, div, i, img, span, text)
-import Html.Attributes as H exposing (classList, style)
+import Html as H exposing (Html, button, div, i, img, span, table, td, text, tr)
+import Html.Attributes as H exposing (classList, colspan, style)
 import Html.Events exposing (onClick)
 import List.Extra
 import ViewModel exposing (..)
@@ -197,6 +197,9 @@ modeSelector model =
 answer : Model -> Html Msg
 answer model =
     let
+        notes =
+            ["C","D","E","F","G","A","B"]
+
         (_, note) =
             model.currentNote
 
@@ -206,49 +209,56 @@ answer model =
         rightFilled c =
             List.member c ["C","D","F","G","A"]
     in
-        div
-            []
-            [ div [ class "blacks" ]
-                (["C","D","E","F","G","A","B"]
+        table
+            [ class "answer" ]
+            [ tr
+                [ class "blacks" ]
+                ( notes
                     |> List.concatMap
                         (\c ->
                             let
                                 correctOrIncorrect =
-                                    [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
-                                        ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+                                    [ ("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+
+                                guess =
+                                    onClick (Guess c)
                             in
-                            [ div
+                            [ td
                                 [ classList ([("filled", leftFilled c) ] ++ correctOrIncorrect)
                                 , H.style [("width", "2.041%")]
+                                , guess
                                 ]
                                 []
-                            , div
+                            , td
                                 [ classList correctOrIncorrect
-                                , H.style [("width", "10.204%")] ]
+                                , H.style [("width", "10.204%")]
+                                , guess
+                                ]
                                 []
-                            , div
+                            , td
                                 [ classList ([("right", True), ("filled", rightFilled c) ] ++ correctOrIncorrect)
                                 , H.style [("width", "2.041%")]
+                                , guess
                                 ]
                                 []
                             ]
                         )
                 )
-            , div [ class "answer" ]
-                (["C","D","E","F","G","A","B"]
-                    |> List.map
-                        (\c ->
-                            button
-                                [ onClick (Guess c)
-                                , classList
-                                    [("correct", model.answerStatus == Correct && (Just c == model.lastGuess) )
-                                    ,("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
-                                ]
-                                [ H.text c ]
-                        )
-                )
+            , tr
+                [ class "whites" ]
+                    ( notes
+                        |> List.map
+                            (\c ->
+                                td
+                                    [ onClick (Guess c)
+                                    , colspan 3
+                                    , classList
+                                        [ ("incorrect", model.answerStatus == Incorrect && (Just c == model.lastGuess) )]
+                                    ]
+                                    [ H.text c ]
+                            )
+                    )
             ]
-
 
 toPercent : Int -> String
 toPercent n =
@@ -376,7 +386,8 @@ view model =
     in
         div
             [class "stage"]
-            [ overlay model
+            [ footer model
+            , overlay model
             , modeSelector model
             , svg
                 [ width "100%"
@@ -384,6 +395,5 @@ view model =
                 , viewBox "0 0 100 95"
                 ]
                 (baseClef ++ trebleClef ++ stave ++ (currentNote model))
-            , footer model
             ]
 
