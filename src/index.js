@@ -1,6 +1,6 @@
 require('./main.css');
 var logoPath = require('./logo.svg');
-var Elm = require('./Main.elm');
+const { Elm } = require('./Main.elm');
 
 var root = document.getElementById('root');
 
@@ -21,7 +21,9 @@ function emptyStats() {
     }
 }
 
-const app = Elm.Main.embed(root);
+const app = Elm.Main.init({
+    node: root
+});
 var stats = JSON.parse(window.localStorage.getItem('note_stats')) || emptyStats();
 if(!stats.octaves) {
     stats = emptyStats();

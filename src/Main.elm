@@ -1,38 +1,44 @@
-module Main exposing (..)
+module Main exposing (decodeStats, init, main, noteStatsDecoder, octaveStatsDecoder, statsDecoder, subscriptions)
 
 import Actions exposing (..)
-import Html exposing (program, programWithFlags)
+import Browser
+import Browser.Dom as Dom
+import Browser.Events as Events
+import Json.Decode as Decode
+import Json.Encode as Encode
+import Ports exposing (receiveStats)
 import Task
+import Time
 import Update exposing (getRandomNote, update)
 import View exposing (view)
 import ViewModel exposing (..)
-import Window
-import Time
-import Ports exposing (receiveStats)
-import Json.Encode as Encode
-import Json.Decode as Decode
-import AnimationFrame exposing (diffs)
 
 
-main : Program Never Model Msg
+main : Program () Model Msg
 main =
-    program
+    Browser.element
         { view = view
-        , init = init
+        , init = \_ -> init
         , update = update
-        , subscriptions = subscriptions }
+        , subscriptions = subscriptions
+        }
 
-init : (Model, Cmd Msg)
+
+init : ( Model, Cmd Msg )
 init =
     let
         model =
             initialModel
     in
-        (model
-        , Cmd.batch
-            [ Task.perform WindowSize Window.size
-            , getRandomNote model.mode ]
-        )
+    ( model
+    , Cmd.batch
+        [ Task.perform
+            (\v -> WindowSize (round v.scene.width) (round v.scene.height))
+            Dom.getViewport
+        , getRandomNote model.mode
+        ]
+    )
+
 
 noteStatsDecoder : Decode.Decoder NoteStats
 noteStatsDecoder =
@@ -41,16 +47,19 @@ noteStatsDecoder =
         (Decode.field "correct" Decode.int)
         (Decode.field "incorrect" Decode.int)
 
+
 octaveStatsDecoder : Decode.Decoder OctaveStats
 octaveStatsDecoder =
     Decode.map2 OctaveStats
         (Decode.field "octave" Decode.int)
         (Decode.field "notes" (Decode.list noteStatsDecoder))
 
+
 statsDecoder : Decode.Decoder Stats
 statsDecoder =
     Decode.map Stats
         (Decode.field "octaves" (Decode.list octaveStatsDecoder))
+
 
 decodeStats : Encode.Value -> Stats
 decodeStats encoded =
@@ -60,18 +69,22 @@ decodeStats encoded =
                 statsDecoder
                 encoded
     in
-        case res of
-            Err err ->
-                let
-                    e = Debug.log "Error" err
-                in
-                    Stats []
-            Ok s ->
-                s
+    case res of
+        Err err ->
+            Stats []
+
+        Ok s ->
+            s
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ Window.resizes WindowSize
+        [ Events.onResize WindowSize
         , receiveStats (decodeStats >> ReceiveStats)
-        , (if model.status == Playing then diffs Tick else Sub.none) ]
+        , if model.status == Playing then
+            Events.onAnimationFrameDelta Tick
+
+          else
+            Sub.none
+        ]
