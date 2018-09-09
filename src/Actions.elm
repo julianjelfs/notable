@@ -1,15 +1,14 @@
-module Actions exposing (..)
+module Actions exposing (Msg(..))
 
-import Time exposing (Time)
-import Window exposing (Size)
 import ViewModel exposing (..)
 
+
 type Msg
-    = WindowSize Size
+    = WindowSize Int Int
     | RandomNote UniqueNote
     | SetMode Mode
     | Guess String
-    | Tick Time
+    | Tick Float
     | ReceiveStats Stats
     | ToggleStats
     | ShowOctave Int

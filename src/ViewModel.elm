@@ -1,42 +1,53 @@
-module ViewModel exposing (..)
+module ViewModel exposing (AnswerStatus(..), GameStatus(..), Mode(..), Model, Note, NoteStats, Octave, OctaveStats, Stats, UniqueNote, initialModel, mapBoth, percentage, timeAllowed, totalsForOctave)
 
 import Time
-import Window exposing (Size)
 
-timeAllowed: Mode -> Float
+
+timeAllowed : Mode -> Float
 timeAllowed mode =
     (case mode of
-        Easy -> 5
-        Medium -> 4
-        Hard -> 3)
-        |> ((*) Time.second)
+        Easy ->
+            5
+
+        Medium ->
+            4
+
+        Hard ->
+            3
+    )
+        |> (*) 1000
 
 
 type Mode
-    = Easy      --middle two octaves
-    | Medium    --middle four octaves
-    | Hard      --all octaves
+    = Easy --middle two octaves
+    | Medium --middle four octaves
+    | Hard --all octaves
+
 
 type GameStatus
     = Playing
     | Paused
+
 
 type AnswerStatus
     = Waiting
     | Correct
     | Incorrect
 
-totalsForOctave : OctaveStats -> (Int, Int) -> (Int, Int)
+
+totalsForOctave : OctaveStats -> ( Int, Int ) -> ( Int, Int )
 totalsForOctave octave agg =
     octave.notes
         |> List.foldl
-            (\n (c, i) ->
-                (c + n.correct, i + n.incorrect)
+            (\n ( c, i ) ->
+                ( c + n.correct, i + n.incorrect )
             )
             agg
 
+
 mapBoth fn =
     Tuple.mapFirst fn >> Tuple.mapSecond fn
+
 
 percentage : Stats -> Int
 percentage stats =
@@ -45,31 +56,42 @@ percentage stats =
             stats.octaves
                 |> List.foldl
                     totalsForOctave
-                    (0,0)
-                |> mapBoth toFloat
-                |> Debug.log "answers"
+                    ( 0, 0 )
     in
-        case answers of
-            (0,0) -> 0
-            (correct, incorrect) ->
-                (correct / (correct + incorrect)) * 100 |> round
+    case answers of
+        ( 0, 0 ) ->
+            0
+
+        ( correct, incorrect ) ->
+            let
+                fCorrect =
+                    toFloat correct
+
+                fIncorrect =
+                    toFloat incorrect
+            in
+            (fCorrect / (fCorrect + fIncorrect)) * 100 |> round
+
 
 type alias NoteStats =
-    { note: String
-    , correct: Int
-    , incorrect: Int
+    { note : String
+    , correct : Int
+    , incorrect : Int
     }
 
+
 type alias OctaveStats =
-    { octave: Int
-    , notes: List NoteStats
+    { octave : Int
+    , notes : List NoteStats
     }
+
 
 type alias Stats =
     { octaves : List OctaveStats }
 
+
 type alias Model =
-    { windowSize : Size
+    { windowSize : ( Int, Int )
     , currentNote : UniqueNote
     , mode : Mode
     , summary : String
@@ -77,22 +99,28 @@ type alias Model =
     , lastGuess : Maybe String
     , stats : Stats
     , showStats : Bool
-    , statsOctave: Int
+    , statsOctave : Int
     , time : Float
     , status : GameStatus
     }
 
-type alias Octave = Int
 
-type alias Note = String
+type alias Octave =
+    Int
 
-type alias UniqueNote = (Octave, Note)
+
+type alias Note =
+    String
+
+
+type alias UniqueNote =
+    ( Octave, Note )
 
 
 initialModel : Model
 initialModel =
-    { windowSize = Size 0 0
-    , currentNote = (0,"C")
+    { windowSize = ( 0, 0 )
+    , currentNote = ( 0, "C" )
     , mode = Easy
     , summary = "Guess the note..."
     , answerStatus = Waiting
@@ -103,4 +131,3 @@ initialModel =
     , time = timeAllowed Easy
     , status = Paused
     }
-
